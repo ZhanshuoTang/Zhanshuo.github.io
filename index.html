@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="唐展硕 Zhanshuo Tang 的个人主页">
+  <title>唐展硕 | Zhanshuo Tang</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg: #090b10;
+      --panel: rgba(255, 255, 255, .075);
+      --panel-strong: rgba(255, 255, 255, .12);
+      --line: rgba(255, 255, 255, .14);
+      --text: #eef2f6;
+      --muted: #9aa4b2;
+      --accent: #8fb8ff;
+      --accent-2: #8dd8c6;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 14% 12%, rgba(143, 184, 255, .16), transparent 30rem),
+        radial-gradient(circle at 86% 4%, rgba(141, 216, 198, .10), transparent 28rem),
+        linear-gradient(135deg, #090b10 0%, #10131a 54%, #0b0d12 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.65), transparent 82%);
+    }
+
+    /* Shared glass surface used by cards, sections, and the modal. */
+    .glass {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .28);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+
+    .nav-glass {
+      border-color: transparent;
+      background: transparent;
+      transition: background .3s ease-out, border-color .3s ease-out, box-shadow .3s ease-out;
+    }
+
+    .nav-glass.is-scrolled {
+      border-color: rgba(255,255,255,.10);
+      background: rgba(9, 11, 16, .74);
+      box-shadow: 0 18px 48px rgba(0,0,0,.22);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    /* Initial page entrance: each element controls its own delay inline. */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      animation: reveal .7s ease-out forwards;
+      animation-delay: var(--delay, 0s);
+    }
+
+    @keyframes reveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Contact cards keep all hover/click motion on transform for smoother frames. */
+    .contact-card {
+      position: relative;
+      overflow: hidden;
+      transform: translateZ(0);
+      transition: transform .28s ease-out, box-shadow .28s ease-out, border-color .28s ease-out, background .28s ease-out;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-8px) scale(1.018);
+      border-color: rgba(143, 184, 255, .42);
+      background: rgba(255, 255, 255, .105);
+      box-shadow: 0 28px 70px rgba(0,0,0,.34), 0 0 0 1px rgba(143,184,255,.08) inset;
+    }
+
+    .contact-card:active,
+    .pressable:active {
+      transform: scale(.975);
+    }
+
+    .ripple {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      pointer-events: none;
+      background: rgba(255, 255, 255, .34);
+      transform: translate(-50%, -50%) scale(0);
+      animation: ripple .62s ease-out;
+    }
+
+    @keyframes ripple {
+      to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(22);
+      }
+    }
+
+    /* Modal uses opacity on the overlay and scale on the panel for a crisp 0.3s motion. */
+    .modal {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease-out;
+    }
+
+    .modal.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-panel {
+      opacity: 0;
+      transform: translateY(14px) scale(.94);
+      transition: opacity .3s ease-out, transform .3s ease-out;
+    }
+
+    .modal.is-open .modal-panel {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .qr-frame {
+      background:
+        linear-gradient(135deg, rgba(143,184,255,.18), rgba(141,216,198,.12)),
+        rgba(255,255,255,.88);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav id="navbar" class="nav-glass fixed left-0 right-0 top-0 z-40 border-b">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 md:px-8">
+      <a href="#top" class="pressable group flex items-center gap-3 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#8fb8ff]">
+        <span class="grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/10 text-sm font-semibold text-white shadow-lg shadow-black/20 transition group-hover:border-[#8fb8ff]/50 group-hover:bg-white/15">ZS</span>
+        <span class="hidden text-sm font-medium text-white/78 sm:inline">Zhanshuo Tang</span>
+      </a>
+      <div class="flex items-center gap-1 rounded-full border border-white/10 bg-white/[.055] p-1 text-sm text-white/70 backdrop-blur">
+        <a class="pressable rounded-full px-4 py-2 transition hover:bg-white/10 hover:text-white" href="#about">简介</a>
+        <a class="pressable rounded-full px-4 py-2 transition hover:bg-white/10 hover:text-white" href="#education">经历</a>
+        <a class="pressable rounded-full px-4 py-2 transition hover:bg-white/10 hover:text-white" href="#contact">联系</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top" class="relative mx-auto max-w-6xl px-5 pb-16 pt-28 md:px-8 md:pb-24 md:pt-36">
+    <section class="grid min-h-[calc(100vh-9rem)] items-center gap-8 lg:grid-cols-[1.08fr_.92fr]">
+      <div>
+        <p class="reveal mb-5 inline-flex rounded-full border border-white/12 bg-white/[.065] px-4 py-2 text-sm text-white/68 shadow-lg shadow-black/10 backdrop-blur" style="--delay:.04s">Northwestern Polytechnical University</p>
+        <h1 class="reveal text-5xl font-semibold leading-[1.05] tracking-normal text-white sm:text-6xl lg:text-7xl" style="--delay:.12s">
+          唐展硕
+          <span class="mt-3 block text-2xl font-medium text-white/50 sm:text-3xl">Zhanshuo Tang</span>
+        </h1>
+        <p class="reveal mt-7 max-w-2xl text-lg leading-8 text-white/68" style="--delay:.2s">
+          西北工业大学电子信息学院信息与通信工程研究生。研究方向为流式三维重建，正在严肃学习中🧐。
+        </p>
+        <div class="reveal mt-9 flex flex-wrap gap-3" style="--delay:.28s">
+          <a href="#contact" class="pressable relative overflow-hidden rounded-full border border-[#8fb8ff]/35 bg-[#8fb8ff]/14 px-5 py-3 text-sm font-medium text-white shadow-xl shadow-black/20 transition hover:bg-[#8fb8ff]/22">查看联系方式</a>
+          <a href="https://github.com/ZhanshuoTang" target="_blank" rel="noreferrer" class="pressable relative overflow-hidden rounded-full border border-white/12 bg-white/[.065] px-5 py-3 text-sm font-medium text-white/78 shadow-xl shadow-black/10 transition hover:bg-white/12 hover:text-white">访问 GitHub</a>
+        </div>
+      </div>
+
+      <aside class="reveal glass rounded-[28px] p-5 md:p-7" style="--delay:.22s" aria-label="个人信息概览">
+        <div class="rounded-3xl border border-white/10 bg-black/18 p-6">
+          <div class="flex items-start justify-between gap-5">
+            <div>
+              <p class="text-sm uppercase tracking-[.2em] text-white/38">Profile</p>
+              <h2 class="mt-3 text-2xl font-semibold text-white">信息与通信工程</h2>
+            </div>
+            <span class="rounded-full border border-[#8dd8c6]/30 bg-[#8dd8c6]/12 px-3 py-1 text-xs text-[#b7fff1]">2026+</span>
+          </div>
+          <div class="mt-8 grid gap-4">
+            <div class="rounded-2xl border border-white/10 bg-white/[.055] p-4">
+              <p class="text-sm text-white/44">本科</p>
+              <p class="mt-1 text-white/86">西北工业大学 · 通信工程 · 2022 - 2026</p>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/[.055] p-4">
+              <p class="text-sm text-white/44">研究生</p>
+              <p class="mt-1 text-white/86">西北工业大学 · 信息与通信工程 · 2026 - ?</p>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/[.055] p-4">
+              <p class="text-sm text-white/44">研究方向</p>
+              <p class="mt-1 text-white/86">流式三维重建</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="about" class="reveal mt-10 scroll-mt-28" style="--delay:.1s">
+      <div class="grid gap-4 md:grid-cols-3">
+        <div class="glass rounded-3xl p-6 md:col-span-2">
+          <p class="text-sm uppercase tracking-[.2em] text-white/38">About</p>
+          <h2 class="mt-3 text-3xl font-semibold text-white">HELLO，I'm 崭朔。</h2>
+          <p class="mt-5 leading-8 text-white/66">
+            目前在西北工业大学电子信息学院攻读研究生学位。
+          </p>
+        </div>
+        <div class="glass rounded-3xl p-6">
+          <p class="text-sm uppercase tracking-[.2em] text-white/38">Focus</p>
+          <p class="mt-5 text-2xl font-semibold leading-snug text-white">3D Vision<br>前馈式三维重建<br>Engineering</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="education" class="reveal mt-6 scroll-mt-28" style="--delay:.14s">
+      <div class="glass rounded-3xl p-6 md:p-8">
+        <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+          <div>
+            <p class="text-sm uppercase tracking-[.2em] text-white/38">Education</p>
+            <h2 class="mt-3 text-3xl font-semibold text-white">教育经历</h2>
+          </div>
+          <p class="max-w-xl text-sm leading-6 text-white/50">持续学习ing👀</p>
+        </div>
+        <div class="mt-7 grid gap-4 md:grid-cols-2">
+          <article class="rounded-2xl border border-white/10 bg-white/[.055] p-5">
+            <p class="text-sm text-[#b7fff1]">2022 - 2026</p>
+            <h3 class="mt-2 text-xl font-semibold text-white">西北工业大学</h3>
+            <p class="mt-2 text-white/58">通信工程 · 本科</p>
+          </article>
+          <article class="rounded-2xl border border-white/10 bg-white/[.055] p-5">
+            <p class="text-sm text-[#b7fff1]">2026 - ?</p>
+            <h3 class="mt-2 text-xl font-semibold text-white">西北工业大学</h3>
+            <p class="mt-2 text-white/58">信息与通信工程 · 研究生</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="mt-16 scroll-mt-28">
+      <div class="reveal mb-7 flex flex-col justify-between gap-4 md:flex-row md:items-end" style="--delay:.1s">
+        <div>
+          <p class="text-sm uppercase tracking-[.2em] text-white/38">Contact</p>
+          <h2 class="mt-3 text-3xl font-semibold text-white">联系方式</h2>
+        </div>
+        <p class="max-w-xl text-sm leading-6 text-white/50">点击卡片查看对应联系方式🔥</p>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <button class="contact-card reveal glass rounded-3xl p-5 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#8fb8ff]" style="--delay:.16s" type="button" data-title="微信 WeChat" data-image="./figure/WeChat_QR.png" data-hint="扫码添加微信，一起交流研究与项目。">
+          <span class="grid h-12 w-12 place-items-center rounded-2xl border border-white/12 bg-white/[.075] text-lg">V</span>
+          <span class="mt-6 block text-xl font-semibold text-white">WeChat</span>
+          <span class="mt-2 block text-sm text-white/48">微信二维码</span>
+        </button>
+        <button class="contact-card reveal glass rounded-3xl p-5 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#8fb8ff]" style="--delay:.22s" type="button" data-title="QQ" data-image="./figure/QQ_QR.png" data-hint="扫码添加 QQ，适合快速沟通。">
+          <span class="grid h-12 w-12 place-items-center rounded-2xl border border-white/12 bg-white/[.075] text-lg">Q</span>
+          <span class="mt-6 block text-xl font-semibold text-white">QQ</span>
+          <span class="mt-2 block text-sm text-white/48">2337355631</span>
+        </button>
+        <button class="contact-card reveal glass rounded-3xl p-5 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#8fb8ff]" style="--delay:.28s" type="button" data-title="GitHub" data-image="./figure/github_QR.svg" data-hint="扫码或点击页面按钮访问 GitHub：ZhanshuoTang。">
+          <span class="grid h-12 w-12 place-items-center rounded-2xl border border-white/12 bg-white/[.075] text-lg">G</span>
+          <span class="mt-6 block text-xl font-semibold text-white">GitHub</span>
+          <span class="mt-2 block text-sm text-white/48">ZhanshuoTang</span>
+        </button>
+        <button class="contact-card reveal glass rounded-3xl p-5 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#8fb8ff]" style="--delay:.34s" type="button" data-title="邮箱 Email" data-image="./figure/email_QR.svg" data-hint="扫码查看邮箱，或直接发送至 2337355631@qq.com。">
+          <span class="grid h-12 w-12 place-items-center rounded-2xl border border-white/12 bg-white/[.075] text-lg">E</span>
+          <span class="mt-6 block text-xl font-semibold text-white">Email</span>
+          <span class="mt-2 block text-sm text-white/48">2337355631@qq.com</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <div id="modal" class="modal fixed inset-0 z-50 grid place-items-center bg-black/48 p-5 backdrop-blur-xl" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-panel glass w-full max-w-sm rounded-[28px] p-5">
+      <div class="mb-4 flex items-center justify-between gap-4">
+        <h2 id="modalTitle" class="text-xl font-semibold text-white">联系方式</h2>
+        <button id="closeModal" class="pressable grid h-10 w-10 place-items-center rounded-full border border-white/12 bg-white/[.07] text-2xl leading-none text-white/70 transition hover:bg-white/12 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8fb8ff]" type="button" aria-label="关闭弹窗">&times;</button>
+      </div>
+      <div class="qr-frame rounded-[24px] p-4 shadow-2xl shadow-black/25">
+        <img id="modalImage" class="mx-auto aspect-square w-full max-w-[260px] rounded-2xl object-contain" src="" alt="">
+      </div>
+      <p id="modalHint" class="mt-4 text-center text-sm leading-6 text-white/56"></p>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const navbar = document.getElementById('navbar');
+      const modal = document.getElementById('modal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalImage = document.getElementById('modalImage');
+      const modalHint = document.getElementById('modalHint');
+      const closeModal = document.getElementById('closeModal');
+      // Navbar becomes glassy once content scrolls underneath it.
+      const setNavState = () => {
+        navbar.classList.toggle('is-scrolled', window.scrollY > 12);
+      };
+
+      // Lightweight ripple feedback for all click targets.
+      const addRipple = (event) => {
+        const target = event.currentTarget;
+        const rect = target.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        ripple.style.left = `${event.clientX - rect.left}px`;
+        ripple.style.top = `${event.clientY - rect.top}px`;
+        target.appendChild(ripple);
+        ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+      };
+
+      const openModal = (card) => {
+        const image = card.dataset.image;
+        modalTitle.textContent = card.dataset.title;
+        modalHint.textContent = card.dataset.hint;
+
+        modalImage.src = image;
+        modalImage.alt = `${card.dataset.title} 二维码`;
+
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+        closeModal.focus({ preventScroll: true });
+        document.body.style.overflow = 'hidden';
+      };
+
+      const hideModal = () => {
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      };
+
+      document.querySelectorAll('.contact-card').forEach((card) => {
+        card.addEventListener('click', (event) => {
+          addRipple(event);
+          openModal(card);
+        });
+      });
+
+      document.querySelectorAll('.pressable').forEach((item) => {
+        item.addEventListener('click', addRipple);
+      });
+
+      closeModal.addEventListener('click', hideModal);
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal) hideModal();
+      });
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modal.classList.contains('is-open')) hideModal();
+      });
+      window.addEventListener('scroll', setNavState, { passive: true });
+      setNavState();
+    })();
+  </script>
+</body>
+</html>
